@@ -1,3 +1,5 @@
+import { INoticiasService } from "./types";
+
 export interface INoticias {
   id: number;
   titulo: string;
@@ -69,3 +71,15 @@ export const obtenerNoticias: () => Promise<INoticias[]> = async () => {
     }, 1000);
   });
 };
+
+
+export const fakeNoticiasService: INoticiasService = {
+  obtenerNoticias: async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(data);
+      }, 1000);
+    });
+  },
+};
+

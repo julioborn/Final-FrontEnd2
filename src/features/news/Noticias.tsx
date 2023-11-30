@@ -1,43 +1,27 @@
 import { useEffect, useState } from "react";
 import { SuscribeImage, CloseButton as Close } from "../../assets";
-import { obtenerNoticias } from "./fakeRest";
-import {
-  CloseButton,
-  TarjetaModal,
-  ContenedorModal,
-  DescripcionModal,
-  ImagenModal,
-  TituloModal,
-  TarjetaNoticia,
-  FechaTarjetaNoticia,
-  DescripcionTarjetaNoticia,
-  ImagenTarjetaNoticia,
-  TituloTarjetaNoticia,
-  ContenedorNoticias,
-  ListaNoticias,
-  TituloNoticias,
-  BotonLectura,
-  BotonSuscribir,
-  CotenedorTexto,
-} from "./styled";
+import * as Styled from "./styled";
+import { INoticiasNormalizadas, INoticiasService } from "./types";
 
-export interface INoticiasNormalizadas {
-  id: number;
-  titulo: string;
-  descripcion: string;
-  fecha: number | string;
-  esPremium: boolean;
-  imagen: string;
-  descripcionCorta?: string;
+// Interfaz que define el contrato para los servicios de noticias
+export interface NoticiasProps {
+  noticiasService: INoticiasService; // Cumple con el Principio de Inversión de Dependencia (D)
 }
 
-const Noticias = () => {
+/**
+ * Componente que renderiza una lista de noticias de Los Simpsons.
+ * Aplica el Principio de Inversión de Dependencia (Dependency Inversion Principle - D)
+ * ya que recibe un servicio de noticias a través de una abstracción (INoticiasService).
+ * @param {NoticiasProps} props - Propiedades del componente.
+ * @returns {JSX.Element} JSX del componente Noticias.
+ */
+const Noticias: React.FC<NoticiasProps> = ({ noticiasService }) => {
   const [noticias, setNoticias] = useState<INoticiasNormalizadas[]>([]);
   const [modal, setModal] = useState<INoticiasNormalizadas | null>(null);
 
   useEffect(() => {
     const obtenerInformacion = async () => {
-      const respuesta = await obtenerNoticias();
+      const respuesta = await noticiasService.obtenerNoticias();
 
       const data = respuesta.map((n) => {
         const titulo = n.titulo
@@ -67,38 +51,38 @@ const Noticias = () => {
     };
 
     obtenerInformacion();
-  }, []);
+  }, [noticiasService]);
 
   return (
-    <ContenedorNoticias>
-      <TituloNoticias>Noticias de los Simpsons</TituloNoticias>
-      <ListaNoticias>
+    <Styled.ContenedorNoticias>
+      <Styled.TituloNoticias>Noticias de los Simpsons</Styled.TituloNoticias>
+      <Styled.ListaNoticias>
         {noticias.map((n) => (
-          <TarjetaNoticia>
-            <ImagenTarjetaNoticia src={n.imagen} />
-            <TituloTarjetaNoticia>{n.titulo}</TituloTarjetaNoticia>
-            <FechaTarjetaNoticia>{n.fecha}</FechaTarjetaNoticia>
-            <DescripcionTarjetaNoticia>
+          <Styled.TarjetaNoticia key={n.id}>
+            <Styled.ImagenTarjetaNoticia src={n.imagen} />
+            <Styled.TituloTarjetaNoticia>{n.titulo}</Styled.TituloTarjetaNoticia>
+            <Styled.FechaTarjetaNoticia>{n.fecha}</Styled.FechaTarjetaNoticia>
+            <Styled.DescripcionTarjetaNoticia>
               {n.descripcionCorta}
-            </DescripcionTarjetaNoticia>
-            <BotonLectura onClick={() => setModal(n)}>Ver más</BotonLectura>
-          </TarjetaNoticia>
+            </Styled.DescripcionTarjetaNoticia>
+            <Styled.BotonLectura onClick={() => setModal(n)}>Ver más</Styled.BotonLectura>
+          </Styled.TarjetaNoticia>
         ))}
         {modal ? (
           modal.esPremium ? (
-            <ContenedorModal>
-              <TarjetaModal>
-                <CloseButton onClick={() => setModal(null)}>
+            <Styled.ContenedorModal>
+              <Styled.TarjetaModal>
+                <Styled.CloseButton onClick={() => setModal(null)}>
                   <img src={Close} alt="close-button" />
-                </CloseButton>
-                <ImagenModal src={SuscribeImage} alt="mr-burns-excelent" />
-                <CotenedorTexto>
-                  <TituloModal>Suscríbete a nuestro Newsletter</TituloModal>
-                  <DescripcionModal>
+                </Styled.CloseButton>
+                <Styled.ImagenModal src={SuscribeImage} alt="mr-burns-excelent" />
+                <Styled.CotenedorTexto>
+                  <Styled.TituloModal>Suscríbete a nuestro Newsletter</Styled.TituloModal>
+                  <Styled.DescripcionModal>
                     Suscríbete a nuestro newsletter y recibe noticias de
                     nuestros personajes favoritos.
-                  </DescripcionModal>
-                  <BotonSuscribir
+                  </Styled.DescripcionModal>
+                  <Styled.BotonSuscribir
                     onClick={() =>
                       setTimeout(() => {
                         alert("Suscripto!");
@@ -107,27 +91,27 @@ const Noticias = () => {
                     }
                   >
                     Suscríbete
-                  </BotonSuscribir>
-                </CotenedorTexto>
-              </TarjetaModal>
-            </ContenedorModal>
+                  </Styled.BotonSuscribir>
+                </Styled.CotenedorTexto>
+              </Styled.TarjetaModal>
+            </Styled.ContenedorModal>
           ) : (
-            <ContenedorModal>
-              <TarjetaModal>
-                <CloseButton onClick={() => setModal(null)}>
+            <Styled.ContenedorModal>
+              <Styled.TarjetaModal>
+                <Styled.CloseButton onClick={() => setModal(null)}>
                   <img src={Close} alt="close-button" />
-                </CloseButton>
-                <ImagenModal src={modal.imagen} alt="news-image" />
-                <CotenedorTexto>
-                  <TituloModal>{modal.titulo}</TituloModal>
-                  <DescripcionModal>{modal.descripcion}</DescripcionModal>
-                </CotenedorTexto>
-              </TarjetaModal>
-            </ContenedorModal>
+                </Styled.CloseButton>
+                <Styled.ImagenModal src={modal.imagen} alt="news-image" />
+                <Styled.CotenedorTexto>
+                  <Styled.TituloModal>{modal.titulo}</Styled.TituloModal>
+                  <Styled.DescripcionModal>{modal.descripcion}</Styled.DescripcionModal>
+                </Styled.CotenedorTexto>
+              </Styled.TarjetaModal>
+            </Styled.ContenedorModal>
           )
         ) : null}
-      </ListaNoticias>
-    </ContenedorNoticias>
+      </Styled.ListaNoticias>
+    </Styled.ContenedorNoticias>
   );
 };
 

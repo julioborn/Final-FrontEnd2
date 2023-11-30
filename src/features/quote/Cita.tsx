@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { shallowEqual } from "react-redux";
-import { Boton, Input, AutorCita, ContenedorCita, TextoCita } from "./styled";
+import * as Styled from "./styled";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
   obtenerCitaDelEstado,
@@ -10,8 +10,12 @@ import {
 } from "./citaSlice";
 import { obtenerMensaje } from "./utils";
 
-function Cita() {
-  const [valorInput, setValorInput] = useState("");
+/**
+ * Componente funcional para mostrar y gestionar citas de los personajes de los Simpsons.
+ * @returns {JSX.Element} JSX que representa el componente.
+ */
+const Cita: React.FC = () => {
+  const [valorInput, setValorInput] = useState<string>(""); // Asegura que valorInput sea siempre un string
   const { cita = "", personaje = "" } =
     useAppSelector(obtenerCitaDelEstado, shallowEqual) || {};
   const estadoPedido = useAppSelector(obtenerEstadoDelPedido);
@@ -26,25 +30,26 @@ function Cita() {
   };
 
   return (
-    <ContenedorCita>
-      <TextoCita>{obtenerMensaje(cita, estadoPedido)}</TextoCita>
-      <AutorCita>{personaje}</AutorCita>
-      <Input
+    <Styled.ContenedorCita>
+      <Styled.TextoCita>{obtenerMensaje(cita, estadoPedido)}</Styled.TextoCita>
+      <Styled.AutorCita>{personaje}</Styled.AutorCita>
+      <Styled.Input
         aria-label="Author Cita"
         value={valorInput}
         onChange={(e) => setValorInput(e.target.value)}
         placeholder="Ingresa el nombre del autor"
       />
-      <Boton
+      <Styled.Boton
         aria-label={valorInput ? "Obtener Cita" : "Obtener cita aleatoria"}
         onClick={onClickObtenerCita}
       >
         {valorInput ? "Obtener Cita" : "Obtener cita aleatoria"}
-      </Boton>
-      <Boton aria-label="Borrar" onClick={onClickBorrar} secondary={true}>
+      </Styled.Boton>
+      <Styled.Boton aria-label="Borrar" onClick={onClickBorrar} secondary={true}>
         Borrar
-      </Boton>
-    </ContenedorCita>
+      </Styled.Boton>
+    </Styled.ContenedorCita>
   );
-}
+};
+
 export default Cita;

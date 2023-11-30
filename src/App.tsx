@@ -3,8 +3,9 @@ import Cita from "./features/quote/Cita";
 import "./App.css";
 import Bio from "./features/bio/Bio";
 import Noticias from "./features/news/Noticias";
+import { fakeNoticiasService } from "./features/news/fakeRest";
 
-function App() {
+function App(): JSX.Element {
   return (
     <div className="App">
       <header className="App-header">
@@ -19,7 +20,7 @@ function App() {
         <Bio />
       </section>
       <section className="App-news">
-        <Noticias />
+        <Noticias noticiasService={fakeNoticiasService} />
       </section>
     </div>
   );
